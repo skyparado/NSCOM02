@@ -224,18 +224,22 @@ long values such as *"Commonwealth Scientific and Industrial Research Organisati
 never truncated and the table never wraps in a standard terminal window.
 
 ```
- Hop       RTT 1      RTT 2      RTT 3  IP Address
+  Hop       RTT 1       RTT 2       RTT 3    IP Address
 ----------------------------------------------------------------------
- [ 1]   2.783 ms   1.582 ms   1.369 ms  192.168.55.254
-       Location: Private / Local network
- [ 3]          *          *          *  Request timed out
- [ 5]  12.741 ms  12.261 ms  14.447 ms  182.18.194.209
-       Location: Cebu City, Central Visayas, Philippines
-       Org     : SKYBROADBAND
- [ 8]  11.122 ms  14.122 ms  12.429 ms  161.49.13.184
-       Location: Pasig, Metro Manila, Philippines
-       Org     : Converge ICT Solution Inc
+ [ 1]    1.266 ms    1.907 ms    1.994 ms    192.168.55.254
+          Location : Private / Local network
+ [ 3]     *           *           *          Request timed out
+ [ 5]   17.716 ms   12.326 ms   20.438 ms    182.18.194.209
+          Location : Cebu City, Central Visayas, Philippines
+          Org      : SKYBROADBAND
+ [ 8]   12.328 ms   13.968 ms   23.255 ms    161.49.13.184
+          Location : Pasig, Metro Manila, Philippines
+          Org      : Converge ICT Solution Inc
 ```
+
+RTT values are right-aligned so the decimal points line up down each column, and `*` markers
+for lost probes are centred in their column so a timed-out hop stays visually aligned with
+the hops around it.
 
 The international hosts show the feature to best effect. Tracing `www.csiro.au` makes the
 whole intercontinental route visible — the traffic leaves the Philippines, crosses the
@@ -243,18 +247,18 @@ Pacific to Los Angeles, lands in Adelaide on Australia's academic network and fi
 Melbourne, with the RTT climbing from ~27 ms to ~227 ms as it goes:
 
 ```
- [10]  26.572 ms  26.285 ms  28.657 ms  161.49.7.151
-       Location: Pasig, Metro Manila, Philippines
-       Org     : Converge ICT Solution Inc
- [13] 166.409 ms 168.332 ms 167.146 ms  206.72.210.64
-       Location: Los Angeles, California, United States
-       Org     : CoreSite
- [14] 217.320 ms 214.436 ms 214.141 ms  113.197.15.136
-       Location: Adelaide, South Australia, Australia
-       Org     : AARNet Pty Ltd
- [20] 226.875 ms 230.824 ms 227.610 ms  150.229.69.37
-       Location: Melbourne, Victoria, Australia
-       Org     : Commonwealth Scientific and Industrial Research Organisation
+ [10]   26.572 ms   26.285 ms   28.657 ms    161.49.7.151
+          Location : Pasig, Metro Manila, Philippines
+          Org      : Converge ICT Solution Inc
+ [13]  166.409 ms  168.332 ms  167.146 ms    206.72.210.64
+          Location : Los Angeles, California, United States
+          Org      : CoreSite
+ [14]  217.320 ms  214.436 ms  214.141 ms    113.197.15.136
+          Location : Adelaide, South Australia, Australia
+          Org      : AARNet Pty Ltd
+ [20]  226.875 ms  230.824 ms  227.610 ms    150.229.69.37
+          Location : Melbourne, Victoria, Australia
+          Org      : Commonwealth Scientific and Industrial Research Organisation
 ```
 
 Geolocation databases should be read with some caution, however. Traces through large transit

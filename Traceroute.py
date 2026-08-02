@@ -188,7 +188,8 @@ def get_route(hostname):
         print(" Geolocation: ip-api.com (City, Region, Country + Organization)")
     print("=" * BANNER_WIDTH)
     print("")
-    print(" Hop  %10s %10s %10s  %s" % ("RTT 1", "RTT 2", "RTT 3", "IP Address"))
+    print("%5s%12s%12s%12s    %s"
+          % ("Hop", "RTT 1", "RTT 2", "RTT 3", "IP Address"))
     print("-" * BANNER_WIDTH)
 
     myID = os.getpid() & 0xFFFF
@@ -275,20 +276,20 @@ def get_route(hostname):
             finally:
                 mySocket.close()
 
-        line = " [%2d] " % ttl
+        line = " [%2d]" % ttl
         for rtt in rtts:
-            line += "%10s " % ("*" if rtt is None else "%.3f ms" % rtt)
+            line += "*".center(12) if rtt is None else "%12s" % ("%.3f ms" % rtt)
         if hopAddr is None:
-            print(line + " Request timed out")
+            print(line + "    Request timed out")
         else:
-            print(line + " " + hopAddr)
+            print(line + "    " + hopAddr)
             if GEO_ENABLED:
                 location, org = getGeoInfo(hopAddr)
-                print("       Location: %s" % location)
+                print("%s Location : %s" % (" " * 9, location))
                 if org:
-                    print("       Org     : %s" % org)
+                    print("%s Org      : %s" % (" " * 9, org))
             if hopMessage:
-                print("       Status  : %s" % hopMessage)
+                print("%s Status   : %s" % (" " * 9, hopMessage))
 
         if reachedDest:
             print("\nTrace complete: reached %s (%s) in %d hops." % (hostname, destAddr, ttl))
