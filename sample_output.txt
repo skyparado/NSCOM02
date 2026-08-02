@@ -1,0 +1,266 @@
+
+======================================================================
+ NSCOM02 MCO2 - Traceroute using ICMP
+======================================================================
+
+ Select a host to trace:
+
+   [1]  Google (USA)                 google.com
+   [2]  DLSU Canvas (Instructure)    dlsu.instructure.com
+   [3]  DLSU Website (Philippines)   dlsu.edu.ph
+   [4]  CSIRO (Australia)            www.csiro.au
+   [5]  M1 Limited (Singapore)       www.m1.com.sg
+   [6]  NII (Japan)                  www.nii.ac.jp
+   [7]  NASA (USA)                   www.nasa.gov
+
+   [8]  Enter a host manually
+   [9]  Trace the three required hosts (1-3)
+  [10]  Trace all seven hosts (1-7)
+
+======================================================================
+ Choice:  Enable IP geolocation for each hop? (y/n): 
+======================================================================
+ Traceroute to google.com (64.233.187.139)
+ Max hops: 30  |  Probes per hop: 3  |  Timeout: 2.0 s
+ Geolocation: ip-api.com (City, Region, Country + Organization)
+======================================================================
+
+ Hop       RTT 1      RTT 2      RTT 3  IP Address
+----------------------------------------------------------------------
+ [ 1]   1.782 ms   1.124 ms   1.124 ms  192.168.55.254
+       Location: Private / Local network
+ [ 2]   3.189 ms   2.691 ms   3.019 ms  192.168.0.1
+       Location: Private / Local network
+ [ 3]          *          *          *  Request timed out
+ [ 4]  14.883 ms  11.400 ms  11.413 ms  172.31.64.133
+       Location: Private / Local network
+ [ 5]  10.627 ms  14.880 ms  11.887 ms  182.18.194.209
+       Location: Cebu City, Central Visayas, Philippines
+       Org     : SKYBROADBAND
+ [ 6]  14.096 ms  13.579 ms  16.351 ms  182.18.194.208
+       Location: Cebu City, Central Visayas, Philippines
+       Org     : SKYBROADBAND
+ [ 7]  12.714 ms  15.879 ms  18.248 ms  172.31.31.2
+       Location: Private / Local network
+ [ 8]  13.779 ms  14.244 ms  17.873 ms  161.49.13.184
+       Location: Pasig, Metro Manila, Philippines
+       Org     : Converge ICT Solution Inc
+ [ 9]  14.672 ms  11.839 ms  12.752 ms  161.49.4.41
+       Location: Pasig, Metro Manila, Philippines
+       Org     : Converge ICT Solution Inc
+ [10]  12.512 ms  23.411 ms  13.566 ms  161.49.13.181
+       Location: Pasig, Metro Manila, Philippines
+       Org     : Converge ICT Solution Inc
+ [11]  15.988 ms  21.073 ms  16.219 ms  142.250.174.148
+       Location: Mountain View, California, United States
+       Org     : Google LLC
+ [12]  18.538 ms  16.420 ms  12.909 ms  142.251.251.115
+       Location: Mountain View, California, United States
+       Org     : Google LLC
+ [13]  14.374 ms  17.439 ms  25.862 ms  142.250.60.6
+       Location: Mountain View, California, United States
+       Org     : Google LLC
+ [14]          *          *          *  Request timed out
+ [15]          *          *          *  Request timed out
+ [16]  35.042 ms  35.686 ms  33.877 ms  209.85.245.48
+       Location: Mountain View, California, United States
+       Org     : Google LLC
+ [17]  43.126 ms  40.487 ms  41.197 ms  209.85.254.145
+       Location: Mountain View, California, United States
+       Org     : Google LLC
+ [18]          *          *          *  Request timed out
+ [19]          *          *          *  Request timed out
+ [20]          *          *          *  Request timed out
+ [21]          *          *          *  Request timed out
+ [22]          *          *          *  Request timed out
+ [23]          *          *          *  Request timed out
+ [24]          *          *          *  Request timed out
+ [25]          *          *          *  Request timed out
+ [26]          *          *          *  Request timed out
+ [27]          *          *          *  Request timed out
+ [28]          *          *          *  Request timed out
+ [29]  38.526 ms  37.757 ms  33.106 ms  64.233.187.139
+       Location: Chang-hua, Taiwan, Taiwan
+       Org     : Google LLC
+
+Trace complete: reached google.com (64.233.187.139) in 29 hops.
+
+======================================================================
+ Traceroute to dlsu.instructure.com (13.33.151.114)
+ Max hops: 30  |  Probes per hop: 3  |  Timeout: 2.0 s
+ Geolocation: ip-api.com (City, Region, Country + Organization)
+======================================================================
+
+ Hop       RTT 1      RTT 2      RTT 3  IP Address
+----------------------------------------------------------------------
+ [ 1]   1.497 ms   1.388 ms   1.204 ms  192.168.55.254
+       Location: Private / Local network
+ [ 2]   4.657 ms   4.585 ms   2.553 ms  192.168.0.1
+       Location: Private / Local network
+ [ 3]          *          *          *  Request timed out
+ [ 4]  14.174 ms  14.373 ms  12.168 ms  172.31.64.133
+       Location: Private / Local network
+ [ 5]  11.425 ms  10.756 ms  15.139 ms  182.18.194.209
+       Location: Cebu City, Central Visayas, Philippines
+       Org     : SKYBROADBAND
+ [ 6]  14.243 ms  14.757 ms  12.184 ms  182.18.194.208
+       Location: Cebu City, Central Visayas, Philippines
+       Org     : SKYBROADBAND
+ [ 7]  14.785 ms  26.103 ms  14.847 ms  130.105.0.18
+       Location: Makati City, Metro Manila, Philippines
+       Org     : SKYBroadband
+ [ 8]  12.491 ms  12.941 ms  12.567 ms  161.49.13.184
+       Location: Pasig, Metro Manila, Philippines
+       Org     : Converge ICT Solution Inc
+ [ 9]  14.672 ms  12.862 ms  15.197 ms  161.49.4.41
+       Location: Pasig, Metro Manila, Philippines
+       Org     : Converge ICT Solution Inc
+ [10]  13.474 ms  13.071 ms  12.695 ms  161.49.13.181
+       Location: Pasig, Metro Manila, Philippines
+       Org     : Converge ICT Solution Inc
+ [11]          *          *          *  Request timed out
+ [12]          *          *          *  Request timed out
+ [13]          *          *          *  Request timed out
+ [14]  14.622 ms  18.743 ms  27.531 ms  13.33.151.114
+       Location: New York, New York, United States
+       Org     : AWS CloudFront (GLOBAL)
+
+Trace complete: reached dlsu.instructure.com (13.33.151.114) in 14 hops.
+
+Note: dlsu.edu.ph has no A record, tracing www.dlsu.edu.ph instead.
+
+======================================================================
+ Traceroute to www.dlsu.edu.ph (104.20.42.168)
+ Max hops: 30  |  Probes per hop: 3  |  Timeout: 2.0 s
+ Geolocation: ip-api.com (City, Region, Country + Organization)
+======================================================================
+
+ Hop       RTT 1      RTT 2      RTT 3  IP Address
+----------------------------------------------------------------------
+ [ 1]   1.392 ms   1.111 ms   1.211 ms  192.168.55.254
+       Location: Private / Local network
+ [ 2]   4.434 ms   5.046 ms   2.702 ms  192.168.0.1
+       Location: Private / Local network
+ [ 3]          *          *          *  Request timed out
+ [ 4]  12.810 ms  16.873 ms  14.596 ms  172.31.64.133
+       Location: Private / Local network
+ [ 5]  10.938 ms  11.301 ms  11.353 ms  182.18.194.209
+       Location: Cebu City, Central Visayas, Philippines
+       Org     : SKYBROADBAND
+ [ 6]  22.244 ms  14.810 ms  13.468 ms  182.18.194.208
+       Location: Cebu City, Central Visayas, Philippines
+       Org     : SKYBROADBAND
+ [ 7]  11.572 ms  11.032 ms  11.162 ms  172.31.31.2
+       Location: Private / Local network
+ [ 8]  15.962 ms  14.187 ms  29.496 ms  161.49.13.184
+       Location: Pasig, Metro Manila, Philippines
+       Org     : Converge ICT Solution Inc
+ [ 9]  14.671 ms  14.322 ms  14.666 ms  161.49.4.41
+       Location: Pasig, Metro Manila, Philippines
+       Org     : Converge ICT Solution Inc
+ [10]          *          *          *  Request timed out
+ [11]          *  45.189 ms  44.585 ms  162.158.160.8
+       Location: Singapore, North West, Singapore
+       Org     : Cloudflare WARP
+ [12] 144.038 ms          * 142.990 ms  172.69.117.39
+       Location: Singapore, North West, Singapore
+       Org     : Cloudflare WARP
+ [13] 140.979 ms 141.674 ms          *  172.69.117.111
+       Location: Singapore, North West, Singapore
+       Org     : Cloudflare WARP
+ [14] 149.327 ms 141.858 ms          *  104.20.42.168
+       Location: Toronto, Ontario, Canada
+       Org     : Cloudflare, Inc.
+
+Trace complete: reached www.dlsu.edu.ph (104.20.42.168) in 14 hops.
+
+======================================================================
+ Traceroute to www.csiro.au (150.229.21.37)
+ Max hops: 30  |  Probes per hop: 3  |  Timeout: 2.0 s
+ Geolocation: ip-api.com (City, Region, Country + Organization)
+======================================================================
+
+ Hop       RTT 1      RTT 2      RTT 3  IP Address
+----------------------------------------------------------------------
+ [ 1]   1.354 ms   1.586 ms   2.742 ms  192.168.55.254
+       Location: Private / Local network
+ [ 2]   3.277 ms   2.639 ms   3.577 ms  192.168.0.1
+       Location: Private / Local network
+ [ 3]          *          *          *  Request timed out
+ [ 4]  17.391 ms  13.951 ms  15.818 ms  172.31.64.133
+       Location: Private / Local network
+ [ 5]  11.433 ms  11.228 ms  11.560 ms  182.18.194.209
+       Location: Cebu City, Central Visayas, Philippines
+       Org     : SKYBROADBAND
+ [ 6]  17.270 ms  12.758 ms  12.624 ms  182.18.194.208
+       Location: Cebu City, Central Visayas, Philippines
+       Org     : SKYBROADBAND
+ [ 7]  13.878 ms  17.714 ms  12.183 ms  172.31.31.12
+       Location: Private / Local network
+ [ 8]          *          *          *  Request timed out
+ [ 9]          *          *          *  Request timed out
+ [10]  34.247 ms  28.932 ms  27.110 ms  161.49.7.151
+       Location: Pasig, Metro Manila, Philippines
+       Org     : Converge ICT Solution Inc
+ [11]          *          *          *  Request timed out
+ [12] 175.879 ms 169.721 ms 166.855 ms  113.19.253.25
+       Location: Pasig, Metro Manila, Philippines
+       Org     : Converge ICT
+ [13] 163.139 ms 164.007 ms 163.143 ms  206.72.210.64
+       Location: Los Angeles, California, United States
+       Org     : CoreSite
+ [14] 221.076 ms 213.374 ms 212.821 ms  113.197.15.136
+       Location: Adelaide, South Australia, Australia
+       Org     : AARNet Pty Ltd
+ [15] 224.763 ms 213.462 ms 214.015 ms  113.197.15.5
+       Location: Adelaide, South Australia, Australia
+       Org     : AARNet Pty Ltd
+ [16] 217.989 ms 221.699 ms 214.663 ms  113.197.15.12
+       Location: Adelaide, South Australia, Australia
+       Org     : AARNet Pty Ltd
+ [17] 261.633 ms 224.523 ms 227.745 ms  113.197.15.11
+       Location: Adelaide, South Australia, Australia
+       Org     : AARNet Pty Ltd
+ [18] 218.647 ms 217.182 ms 219.940 ms  138.44.161.27
+       Location: Canberra, Australian Capital Territory, Australia
+       Org     : Australian Academic and Research Network
+ [19]          *          *          *  Request timed out
+ [20] 221.664 ms 218.885 ms 229.441 ms  150.229.21.37
+       Location: Melbourne, Victoria, Australia
+       Org     : Commonwealth Scientific and Industrial Research Organisation
+
+Trace complete: reached www.csiro.au (150.229.21.37) in 20 hops.
+
+======================================================================
+ Traceroute to www.m1.com.sg (94.188.234.12)
+ Max hops: 30  |  Probes per hop: 3  |  Timeout: 2.0 s
+ Geolocation: ip-api.com (City, Region, Country + Organization)
+======================================================================
+
+ Hop       RTT 1      RTT 2      RTT 3  IP Address
+----------------------------------------------------------------------
+ [ 1]   5.487 ms   1.239 ms   1.260 ms  192.168.55.254
+       Location: Private / Local network
+ [ 2]   6.906 ms   3.334 ms   2.968 ms  192.168.0.1
+       Location: Private / Local network
+ [ 3]          *          *          *  Request timed out
+ [ 4]  17.074 ms  12.679 ms  10.126 ms  172.31.64.133
+       Location: Private / Local network
+ [ 5]  10.211 ms  13.917 ms   9.806 ms  182.18.194.209
+       Location: Cebu City, Central Visayas, Philippines
+       Org     : SKYBROADBAND
+ [ 6]  11.787 ms  11.368 ms  15.528 ms  182.18.194.208
+       Location: Cebu City, Central Visayas, Philippines
+       Org     : SKYBROADBAND
+ [ 7]  16.462 ms  15.697 ms  10.188 ms  130.105.0.18
+       Location: Makati City, Metro Manila, Philippines
+       Org     : SKYBroadband
+ [ 8]  11.152 ms  11.638 ms  14.499 ms  161.49.13.184
+       Location: Pasig, Metro Manila, Philippines
+       Org     : Converge ICT Solution Inc
+ [ 9]  16.685 ms  11.916 ms  11.283 ms  161.49.4.41
+       Location: Pasig, Metro Manila, Philippines
+       Org     : Converge ICT Solution Inc
+ [10]  42.111 ms  44.893 ms  49.264 ms  161.49.12.29
+       Location: Pasig, Metro Manila, Philippines
+       Org     : Converge ICT Solution Inc
