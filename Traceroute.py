@@ -218,115 +218,121 @@ def get_route(hostname):
     seq = 0
     reachedDest = False
 
-    for ttl in range(1, MAX_HOPS + 1):
-        rtts = []
-        hopAddr = None
-        hopMessage = None
+    icmp = getprotobyname("icmp")
+    mySocket = socket(AF_INET, SOCK_RAW, icmp)
+    mySocket.settimeout(TIMEOUT)
 
-        for tries in range(TRIES):
-            timeLeft = TIMEOUT
-            icmp = getprotobyname("icmp")
-            mySocket = socket(AF_INET, SOCK_RAW, icmp)
+    try:
+        for ttl in range(1, MAX_HOPS + 1):
             mySocket.setsockopt(IPPROTO_IP, IP_TTL, struct.pack('I', ttl))
-            mySocket.settimeout(TIMEOUT)
-            try:
-                seq = (seq + 1) & 0x7FFF
-                d = build_packet(myID, seq)
-                mySocket.sendto(d, (destAddr, 0))
-                t = time.time()
+            rtts = []
+            hopAddr = None
+            hopMessage = None
 
-                while True:
-                    startedSelect = time.time()
-                    whatReady = select.select([mySocket], [], [], timeLeft)
-                    howLongInSelect = (time.time() - startedSelect)
-                    if whatReady[0] == []:
-                        rtts.append(None)
-                        break
-                    recvPacket, addr = mySocket.recvfrom(1024)
-                    timeReceived = time.time()
+            for tries in range(TRIES):
+                timeLeft = TIMEOUT
+                try:
+                    seq = (seq + 1) & 0x7FFF
+                    d = build_packet(myID, seq)
+                    mySocket.sendto(d, (destAddr, 0))
+                    t = time.time()
 
-                    icmpHeader = recvPacket[20:28]
-                    types, code, checksum_val, packetID, sequence = struct.unpack("bbHHh", icmpHeader)
-
-                    isOurs = False
-                    if types in (11, 3):
-                        if len(recvPacket) >= 56:
-                            quoted = struct.unpack("bbHHh", recvPacket[48:56])
-                            if quoted[3] == myID and quoted[4] == seq:
-                                isOurs = True
-                    elif types == 0:
-                        if packetID == myID and sequence == seq:
-                            isOurs = True
-
-                    if not isOurs:
-                        timeLeft = timeLeft - howLongInSelect
-                        if timeLeft <= 0:
+                    while True:
+                        startedSelect = time.time()
+                        whatReady = select.select([mySocket], [], [], timeLeft)
+                        howLongInSelect = (time.time() - startedSelect)
+                        if whatReady[0] == []:
                             rtts.append(None)
                             break
-                        continue
+                        recvPacket, addr = mySocket.recvfrom(1024)
+                        timeReceived = time.time()
 
-                    hopAddr = addr[0]
-                    rtts.append((timeReceived - t) * 1000)
+                        ihl = (recvPacket[0] & 0x0F) * 4
+                        icmpHeader = recvPacket[ihl:ihl + 8]
+                        types, code, checksum_val, packetID, sequence = struct.unpack("bbHHh", icmpHeader)
 
-                    if types == 11:
-                        pass
-                    elif types == 3:
-                        errorCodes = {
-                            0: "Destination Network Unreachable",
-                            1: "Destination Host Unreachable",
-                            2: "Destination Protocol Unreachable",
-                            3: "Destination Port Unreachable",
-                            9: "Network Administratively Prohibited",
-                            10: "Host Administratively Prohibited",
-                            13: "Communication Administratively Prohibited",
-                        }
-                        hopMessage = errorCodes.get(code, "Destination Unreachable (code %d)" % code)
-                        reachedDest = True
-                    elif types == 0:
-                        reachedDest = True
-                    else:
-                        hopMessage = "Unexpected ICMP type %d" % types
-                    break
+                        isOurs = False
+                        if types in (11, 3):
+                            innerIpStart = ihl + 8
+                            innerIhl = (recvPacket[innerIpStart] & 0x0F) * 4
+                            innerIcmpStart = innerIpStart + innerIhl
+                            if len(recvPacket) >= innerIcmpStart + 8:
+                                quoted = struct.unpack("bbHHh", recvPacket[innerIcmpStart:innerIcmpStart + 8])
+                                if quoted[3] == myID and quoted[4] == seq:
+                                    isOurs = True
+                        elif types == 0:
+                            if packetID == myID and sequence == seq:
+                                isOurs = True
 
-            except timeout:
-                rtts.append(None)
-                continue
-            except error as e:
-                print("  Socket error: %s" % e)
-                rtts.append(None)
-                continue
-            finally:
-                mySocket.close()
+                        if not isOurs:
+                            timeLeft = timeLeft - howLongInSelect
+                            if timeLeft <= 0:
+                                rtts.append(None)
+                                break
+                            continue
 
-        line = " [%2d]" % ttl
-        for rtt in rtts:
-            line += "*".center(12) if rtt is None else "%12s" % ("%.3f ms" % rtt)
-        if hopAddr is None:
-            if GEO_ENABLED:
-                print(line + "   " + "%-16s %s" % ("*", "Request timed out"))
+                        hopAddr = addr[0]
+                        rtts.append((timeReceived - t) * 1000)
+
+                        if types == 11:
+                            pass
+                        elif types == 3:
+                            errorCodes = {
+                                0: "Destination Network Unreachable",
+                                1: "Destination Host Unreachable",
+                                2: "Destination Protocol Unreachable",
+                                3: "Destination Port Unreachable",
+                                9: "Network Administratively Prohibited",
+                                10: "Host Administratively Prohibited",
+                                13: "Communication Administratively Prohibited",
+                            }
+                            hopMessage = errorCodes.get(code, "Destination Unreachable (code %d)" % code)
+                            reachedDest = True
+                        elif types == 0:
+                            reachedDest = True
+                        else:
+                            hopMessage = "Unexpected ICMP type %d" % types
+                        break
+
+                except timeout:
+                    rtts.append(None)
+                    continue
+                except error as e:
+                    print("  Socket error: %s" % e)
+                    rtts.append(None)
+                    continue
+
+            line = " [%2d]" % ttl
+            for rtt in rtts:
+                line += "*".center(12) if rtt is None else "%12s" % ("%.3f ms" % rtt)
+            if hopAddr is None:
+                if GEO_ENABLED:
+                    print(line + "   " + "%-16s %s" % ("*", "Request timed out"))
+                else:
+                    print(line + "   Request timed out")
             else:
-                print(line + "   Request timed out")
-        else:
-            if GEO_ENABLED:
-                location, org = getGeoInfo(hopAddr)
-                detail = location
-                if org:
-                    detail += " | " + org
-                if hopMessage:
-                    detail += "  [%s]" % hopMessage
-                print(line + "   " + "%-16s %s" % (formatHop(hopAddr), detail))
-            else:
-                out = line + "   " + formatHop(hopAddr)
-                if hopMessage:
-                    out += "   [%s]" % hopMessage
-                print(out)
+                if GEO_ENABLED:
+                    location, org = getGeoInfo(hopAddr)
+                    detail = location
+                    if org:
+                        detail += " | " + org
+                    if hopMessage:
+                        detail += "  [%s]" % hopMessage
+                    print(line + "   " + "%-16s %s" % (formatHop(hopAddr), detail))
+                else:
+                    out = line + "   " + formatHop(hopAddr)
+                    if hopMessage:
+                        out += "   [%s]" % hopMessage
+                    print(out)
 
-        if reachedDest:
-            print("\nTrace complete: reached %s (%s) in %d hops." % (hostname, destAddr, ttl))
-            print("")
-            return
-    print("\nTrace stopped: destination not reached within %d hops." % MAX_HOPS)
-    print("")
+            if reachedDest:
+                print("\nTrace complete: reached %s (%s) in %d hops." % (hostname, destAddr, ttl))
+                print("")
+                return
+        print("\nTrace stopped: destination not reached within %d hops." % MAX_HOPS)
+        print("")
+    finally:
+        mySocket.close()
 
 
 if __name__ == "__main__":
