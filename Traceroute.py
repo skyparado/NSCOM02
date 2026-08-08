@@ -112,6 +112,20 @@ def getGeoInfo(ip):
     return result
 
 
+def reverseDns(ip):
+    try:
+        return gethostbyaddr(ip)[0]
+    except (herror, gaierror, error):
+        return None
+
+
+def formatHop(ip):
+    name = reverseDns(ip)
+    if name and name != ip:
+        return "%s [%s]" % (name, ip)
+    return ip
+
+
 def resolveHost(hostname):
     try:
         return hostname, gethostbyname(hostname)
@@ -181,16 +195,24 @@ def get_route(hostname):
     hostname, destAddr = resolveHost(hostname)
     print("")
     print("=" * BANNER_WIDTH)
+    print("")
     print(" Traceroute to %s (%s)" % (hostname, destAddr))
     print(" Max hops: %d  |  Probes per hop: %d  |  Timeout: %.1f s"
           % (MAX_HOPS, TRIES, TIMEOUT))
     if GEO_ENABLED:
         print(" Geolocation: ip-api.com (City, Region, Country + Organization)")
+    print("")
     print("=" * BANNER_WIDTH)
     print("")
-    print("%5s%12s%12s%12s    %s"
-          % ("Hop", "RTT 1", "RTT 2", "RTT 3", "IP Address"))
-    print("-" * BANNER_WIDTH)
+    if GEO_ENABLED:
+        print("%5s%12s%12s%12s   %-16s %s"
+              % ("Hop", "RTT 1", "RTT 2", "RTT 3", "IP Address",
+                 "Location / Organization"))
+        print("-" * 90)
+    else:
+        print("%5s%12s%12s%12s   %s"
+              % ("Hop", "RTT 1", "RTT 2", "RTT 3", "IP Address"))
+        print("-" * BANNER_WIDTH)
 
     myID = os.getpid() & 0xFFFF
     seq = 0
@@ -280,34 +302,41 @@ def get_route(hostname):
         for rtt in rtts:
             line += "*".center(12) if rtt is None else "%12s" % ("%.3f ms" % rtt)
         if hopAddr is None:
-            print(line + "    Request timed out")
+            if GEO_ENABLED:
+                print(line + "   " + "%-16s %s" % ("*", "Request timed out"))
+            else:
+                print(line + "   Request timed out")
         else:
-            print(line + "    " + hopAddr)
             if GEO_ENABLED:
                 location, org = getGeoInfo(hopAddr)
-                print("%s Location : %s" % (" " * 9, location))
+                detail = location
                 if org:
-                    print("%s Org      : %s" % (" " * 9, org))
-            if hopMessage:
-                print("%s Status   : %s" % (" " * 9, hopMessage))
+                    detail += " | " + org
+                if hopMessage:
+                    detail += "  [%s]" % hopMessage
+                print(line + "   " + "%-16s %s" % (formatHop(hopAddr), detail))
+            else:
+                out = line + "   " + formatHop(hopAddr)
+                if hopMessage:
+                    out += "   [%s]" % hopMessage
+                print(out)
 
         if reachedDest:
             print("\nTrace complete: reached %s (%s) in %d hops." % (hostname, destAddr, ttl))
+            print("")
             return
     print("\nTrace stopped: destination not reached within %d hops." % MAX_HOPS)
+    print("")
 
 
 if __name__ == "__main__":
     presets = {
-        "1": ("Google (USA)", "google.com"),
-        "2": ("DLSU Canvas (Instructure)", "dlsu.instructure.com"),
-        "3": ("DLSU Website (Philippines)", "dlsu.edu.ph"),
-        "4": ("CSIRO (Australia)", "www.csiro.au"),
-        "5": ("M1 Limited (Singapore)", "www.m1.com.sg"),
-        "6": ("NII (Japan)", "www.nii.ac.jp"),
-        "7": ("NASA (USA)", "www.nasa.gov"),
+        "1": ("Google", "google.com"),
+        "2": ("DLSU Canvas", "dlsu.instructure.com"),
+        "3": ("DLSU Website", "dlsu.edu.ph"),
+        "4": ("NASA", "www.nasa.gov"),
     }
-    presetKeys = ("1", "2", "3", "4", "5", "6", "7")
+    givenKeys = ("1", "2", "3")
 
     print("")
     print("=" * BANNER_WIDTH)
@@ -316,16 +345,18 @@ if __name__ == "__main__":
     print("")
     print(" Select a host to trace:")
     print("")
-    for key in presetKeys:
-        print("   [%s]  %-28s %s" % (key, presets[key][0], presets[key][1]))
+    print(" I. Given Hosts")
+    for key in givenKeys:
+        print("   [%s]  %-14s %s" % (key, presets[key][0], presets[key][1]))
     print("")
-    print("   [8]  Enter a host manually")
-    print("   [9]  Trace the three required hosts (1-3)")
-    print("  [10]  Trace all seven hosts (1-7)")
+    print(" II. Additional Test Cases")
+    print("   [4]  %-14s %s" % (presets["4"][0], presets["4"][1]))
+    print("   [5]  Enter host manually")
+    print("   [6]  ALL Three (1-3)")
     print("")
     print("=" * BANNER_WIDTH)
 
-    choice = askChoice(" Choice: ", set(presetKeys) | {"8", "9", "10"})
+    choice = askChoice("\n Choice: ", {"1", "2", "3", "4", "5", "6"})
     if choice is None:
         sys.exit(0)
 
@@ -337,15 +368,13 @@ if __name__ == "__main__":
 
     if choice in presets:
         hosts = [presets[choice][1]]
-    elif choice == "8":
+    elif choice == "5":
         manual = askHost()
         if manual is None:
             sys.exit(0)
         hosts = [manual]
-    elif choice == "9":
-        hosts = [presets[k][1] for k in ("1", "2", "3")]
     else:
-        hosts = [presets[k][1] for k in presetKeys]
+        hosts = [presets[k][1] for k in givenKeys]
 
     try:
         for host in hosts:
